@@ -15,11 +15,12 @@ import numpy as np
 
 from .utils import get_random_coordinates
 
+
 class Snake:
-    '''
-    The Snake class mimics the behaviour of snakes in Battlesnake.io based on 
+    """
+    The Snake class mimics the behaviour of snakes in Battlesnake.io based on
     https://docs.battlesnake.com/rules
-    
+
     Parameters:
     -----------
     starting_position: (int, int)
@@ -28,7 +29,7 @@ class Snake:
     map_size: (int, int)
         The size of the map
 
-    '''
+    """
 
     UP = 0
     DOWN = 1
@@ -36,17 +37,17 @@ class Snake:
     RIGHT = 3
 
     FULL_HEALTH = 100
-    
+
     def __init__(self, starting_position, map_size):
         self.health = self.FULL_HEALTH
-        self.locations = [] # Head of the snake is element n and the end is element 0
+        self.locations = []  # Head of the snake is element n and the end is element 0
         self.locations.append(starting_position)
         self.facing_direction = None
         self._is_alive = True
         self.ate_food = False
         self.map_size = map_size
         self.colour = list(np.random.choice(range(256), size=3))
-        self._number_of_initial_body_stacking = 2 # At the start of the game, snakes of size 3 are stacked.
+        self._number_of_initial_body_stacking = 2  # At the start of the game, snakes of size 3 are stacked.
         # self._number_of_initial_body_stacking == 2 to account for the initial body
 
     @classmethod
@@ -62,8 +63,8 @@ class Snake:
         map_size: (int, int)
         '''
         tmp_locations = []
-        for i, j in locations[::-1]: # head is element n
-            tmp_locations.append(np.array([i, j])) 
+        for i, j in locations[::-1]:  # head is element n
+            tmp_locations.append(np.array([i, j]))
 
         if len(tmp_locations) == 0:
             head = None
@@ -89,7 +90,7 @@ class Snake:
             elif difference[0] == 0 and difference[1] == 1:
                 cls.facing_direction = Snake.RIGHT
         return cls
-        
+
     def move(self, direction):
         '''
         Moves the snakes in the direction stated
@@ -109,9 +110,9 @@ class Snake:
         is_forbidden = False
         if not self._is_alive:
             return is_forbidden
-        
-        if self.facing_direction == None:
-            self.facing_direction == direction
+
+        if self.facing_direction is None:
+            self.facing_direction = direction
 
         if self.is_facing_opposite_of_direction(direction) and len(self.locations) > 0:
             direction = self.facing_direction
@@ -127,11 +128,11 @@ class Snake:
         elif self.ate_food:
             self.ate_food = False
         else:
-            self.locations = self.locations[1:] # remove the end
+            self.locations = self.locations[1:]  # remove the end
         self.locations.append(new_head)
         self.facing_direction = direction
         return is_forbidden
-        
+
     def is_facing_opposite_of_direction(self, direction):
         '''
         Function to indicate if the indended direction is in the opposite of 
@@ -160,7 +161,7 @@ class Snake:
         '''
         head = self.get_head()
         previous_head = np.copy(head)
-        
+
         if self.facing_direction == Snake.UP:
             previous_head[0] += 1
         elif self.facing_direction == Snake.DOWN:
@@ -206,7 +207,7 @@ class Snake:
             new_coordinate[1] = new_coordinate[1] - 1
         elif direction == self.RIGHT:
             new_coordinate[1] = new_coordinate[1] + 1
-        
+
         return new_coordinate
 
     def can_snake_move_in_direction(self, direction):
@@ -260,7 +261,7 @@ class Snake:
         --------
         map_image, np.array(self.map_size)
             image of the position of this snake
-        '''        
+        '''
         if return_type == "Colour":
             map_image = np.zeros((self.map_size[0], self.map_size[1], 3))
         else:
@@ -276,7 +277,7 @@ class Snake:
             elif return_type == "Binary":
                 map_image[location[0], location[1]] = 1
             elif return_type == "Numbered":
-                map_image[location[0], location[1]] = i+1
+                map_image[location[0], location[1]] = i + 1
 
         # Color the head differently
         if return_type == "Colour":
@@ -312,6 +313,7 @@ class Snake:
         self.ate_food = True
         self.health = self.FULL_HEALTH
 
+
 class Snakes:
     '''
     The Snakes class managers n number of snakes
@@ -324,6 +326,7 @@ class Snakes:
     snake_spawn_locations: [(int, int)] optional
         Parameter to force snakes to spawn in certain positions. Used for testing
     '''
+
     def __init__(self, map_size, number_of_snakes, snake_spawn_locations=[]):
         self.map_size = map_size
         self.number_of_snakes = number_of_snakes
@@ -359,13 +362,13 @@ class Snakes:
         number_of_snakes = len(snake_dicts)
         cls = Snakes(map_size, number_of_snakes)
         cls.snakes = []
-        
+
         for snake_dict in snake_dicts:
             locations = []
 
             for loc in snake_dict["body"]:
                 locations.append((loc["y"], loc["x"]))
-            
+
             health = snake_dict["health"]
             snake = Snake.make_from_list(locations, health, map_size)
             cls.snakes.append(snake)
@@ -386,9 +389,9 @@ class Snakes:
         map_image: np.array(map_sizep[0], map_size[1], 1)
             If any snake is on coordinate i, j, map_image[i, j] will be 1
         '''
-        sum_map = np.sum(self.get_snake_depth_51_map(excluded_snakes=excluded_snakes), 2)   
+        sum_map = np.sum(self.get_snake_depth_51_map(excluded_snakes=excluded_snakes), 2)
         return sum_map
-            
+
     def get_snake_numbered_map(self, excluded_snakes=[]):
         '''
         Function to generate a numbered map of the locations of any snake
@@ -434,7 +437,6 @@ class Snakes:
             if snake not in excluded_snakes:
                 map_image[:, :, i] = snake.get_snake_map(return_type="Numbered")
         return map_image
-
 
     def get_snake_depth_51_map(self, excluded_snakes=[]):
         '''
