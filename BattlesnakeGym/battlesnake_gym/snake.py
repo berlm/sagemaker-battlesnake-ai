@@ -70,26 +70,26 @@ class Snake:
             head = None
         else:
             head = tmp_locations[-1]
-        cls = Snake(head, map_size)
-        cls.locations = tmp_locations
-        cls.health = health
+        self = Snake(head, map_size)
+        self.locations = tmp_locations
+        self.health = health
         if len(tmp_locations) == 0:
-            cls.kill_snake()
+            self.kill_snake()
 
-        if len(cls.locations) > 1:
+        if len(self.locations) > 1:
             # Calculate the facing direction with the head and the next location
-            snake_head = cls.locations[-1]
-            snake_2nd_body = cls.locations[-2]
+            snake_head = self.locations[-1]
+            snake_2nd_body = self.locations[-2]
             difference = (snake_head[0] - snake_2nd_body[0], snake_head[1] - snake_2nd_body[1])
             if difference[0] == -1 and difference[1] == 0:
-                cls.facing_direction = Snake.UP
+                self.facing_direction = Snake.UP
             elif difference[0] == 1 and difference[1] == 0:
-                cls.facing_direction = Snake.DOWN
+                self.facing_direction = Snake.DOWN
             elif difference[0] == 0 and difference[1] == -1:
-                cls.facing_direction = Snake.LEFT
+                self.facing_direction = Snake.LEFT
             elif difference[0] == 0 and difference[1] == 1:
-                cls.facing_direction = Snake.RIGHT
-        return cls
+                self.facing_direction = Snake.RIGHT
+        return self
 
     def move(self, direction):
         '''
@@ -231,7 +231,7 @@ class Snake:
             Translated coordinate
 
         '''
-        if self._is_facing_opposite_of_direction(direction):
+        if self.is_facing_opposite_of_direction(direction):
             return False
         return True
 

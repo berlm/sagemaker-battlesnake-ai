@@ -11,11 +11,11 @@
 # express or implied. See the License for the specific language governing 
 # permissions and limitations under the License.
 
-import math
 import random
-
 import numpy as np
+
 from .utils import get_random_coordinates, generate_coordinate_list_from_binary_map
+
 
 class Food:
     '''
@@ -28,11 +28,12 @@ class Food:
         After the list is exhausted, food will be randomly spawned
     '''
     FOOD_SPAWN_CHANCE = 0.15
-    def __init__(self, map_size, food_spawn_locations=[]):
+
+    def __init__(self, map_size, food_spawn_locations=None):
         self.map_size = map_size
         self.locations_map = np.zeros(shape=(map_size[0], map_size[1]))
 
-        self.food_spawn_locations = food_spawn_locations
+        self.food_spawn_locations = food_spawn_locations or []
 
     @classmethod
     def make_from_list(cls, map_size, food_list):
@@ -44,11 +45,11 @@ class Food:
         food_list: [(int, int)]
             Coordinates of the food locations
         '''
-        cls = Food(map_size)
+        self = Food(map_size)
         for food in food_list:
             i, j = food
-            cls.locations_map[i, j] = 1
-        return cls
+            self.locations_map[i, j] = 1
+        return self
 
     def spawn_food(self, snake_map):
         '''
@@ -67,7 +68,7 @@ class Food:
             locations = get_random_coordinates(self.map_size, 1, excluding=snake_locations)
         for location in locations:
             self.locations_map[location[0], location[1]] = 1
-        
+
     def end_of_turn(self, snake_locations):
         '''
         Function to be called at the end of each step. 
@@ -76,7 +77,7 @@ class Food:
         '''
         if random.random() < self.FOOD_SPAWN_CHANCE:
             self.spawn_food(snake_locations)
-                    
+
     def get_food_map(self):
         '''
         Function to get a binary image of all the present food

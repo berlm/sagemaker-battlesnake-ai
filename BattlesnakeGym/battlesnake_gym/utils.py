@@ -15,11 +15,13 @@ import numpy as np
 import gym
 import math
 
+
 def is_coord_in(coord, array):
     for a in array:
         if a[0] == coord[0] and a[1] == coord[1]:
             return True
     return False
+
 
 def get_random_coordinates(map_size, n, excluding=[]):
     '''
@@ -50,6 +52,7 @@ def get_random_coordinates(map_size, n, excluding=[]):
     random_coordinates = np.array(coordinates)[indexes]
     return random_coordinates
 
+
 def generate_coordinate_list_from_binary_map(map_image):
     '''
     Helper function to convert binary maps into a list of coordinates
@@ -61,10 +64,12 @@ def generate_coordinate_list_from_binary_map(map_image):
                 coordinate_list.append((i, j))
     return coordinate_list
 
+
 class MultiAgentActionSpace(list):
     '''
     Code taken from https://github.com/koulanurag/ma-gym/blob/master/ma_gym/envs/utils/action_space.py
     '''
+
     def __init__(self, agents_action_space):
         for x in agents_action_space:
             assert isinstance(x, gym.spaces.space.Space)
@@ -77,5 +82,6 @@ class MultiAgentActionSpace(list):
         """ samples action for each agent from uniform distribution"""
         return [agent_action_space.sample() for agent_action_space in self._agents_action_space]
 
+
 def get_distance(point1, point2):
-    return math.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
+    return math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)

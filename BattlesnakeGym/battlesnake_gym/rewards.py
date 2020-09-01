@@ -11,19 +11,20 @@
 # express or implied. See the License for the specific language governing 
 # permissions and limitations under the License.
 
-import numpy as np
-
 class Rewards:
     '''
     Base class to set up rewards for the battlesnake gym
     '''
+
     def get_reward(self, name, snake_id, episode):
         raise NotImplemented()
+
 
 class SimpleRewards(Rewards):
     '''
     Simple class to handle a fixed reward scheme
     '''
+
     def __init__(self):
         self.reward_dict = {"another_turn": 1,
                             "ate_food": 0,

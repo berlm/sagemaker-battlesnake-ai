@@ -11,11 +11,9 @@
 # express or implied. See the License for the specific language governing 
 # permissions and limitations under the License.
 
-from .snake import Snakes
 from .food import Food
-import pandas as pd
-import string
-import numpy as np
+from .snake import Snakes
+
 
 class Game_state_parser:
     '''
@@ -28,19 +26,20 @@ class Game_state_parser:
         Dict is in the same form as in the battlesnake engine
         https://docs.battlesnake.com/snake-api
     '''
+
     def __init__(self, game_dict):
         self.game_dict = game_dict
         self.board_dict = self.game_dict["board"]
-        self.map_size = (self.board_dict["height"], self.board_dict["width"]) 
+        self.map_size = (self.board_dict["height"], self.board_dict["width"])
         self.number_of_snakes = len(self.board_dict["snakes"])
-                
-    def parse(self):     
+
+    def parse(self):
         # Get food locations
         food_locations = []
         for food_location in self.board_dict["food"]:
             x, y = food_location["x"], food_location["y"]
             food_locations.append((y, x))
-                    
+
         food = Food.make_from_list(self.map_size, food_locations)
         snakes = Snakes.make_from_dict(self.map_size, self.board_dict["snakes"])
 
